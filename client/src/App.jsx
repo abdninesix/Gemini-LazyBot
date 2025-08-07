@@ -83,9 +83,9 @@ function App() {
   return (
     <div className="flex flex-col px-8 md:px-16 lg:px-32 xl:px-40 h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Header */}
-      <header className="py-2 flex items-center justify-between font-semibold">
+      <header className="w-full py-2 px-8 md:px-16 lg:px-32 xl:px-40 fixed top-0 left-0 flex items-center justify-between font-semibold backdrop-blur-sm">
         <span className="flex items-center gap-2 text-xl cursor-pointer">LazyBot<Bot size={30} /></span>
-        <span className="flex items-center gap-2 text-base">Start Chatting</span>
+        <span className="text-base">Start Chatting</span>
         <button
           onClick={toggleDarkMode}
           title="Toggle dark mode"
@@ -96,13 +96,13 @@ function App() {
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-6 space-y-4 scrollbar-thin scrollbar-thu scrollbar-track-transparent dark:scrollbar-thumb-gray-600">
+      <div className="flex-1 overflow-y-auto py-6 space-y-4 scrollbar-none">
         {messages.map((msg, idx) => (
-          <div key={idx} className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
+          <div key={idx} className={`group flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
             {/* Copy Button */}
             <button
               onClick={() => navigator.clipboard.writeText(msg.text)}
-              className="mb-1 mx-2 cursor-pointer text-xs text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white"
+              className="mb-1 mx-2 cursor-pointer text-xs opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white"
               title="Copy to clipboard"
             >
               <Copy size={14} />
@@ -134,7 +134,7 @@ function App() {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="py-4 flex items-end gap-2">
+      <form onSubmit={handleSubmit} className="w-full fixed bottom-0 left-0 py-2 px-8 md:px-16 lg:px-32 xl:px-40 flex items-end gap-2 backdrop-blur-sm">
         <textarea
           ref={textareaRef}
           rows={1}
