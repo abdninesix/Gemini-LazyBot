@@ -83,8 +83,9 @@ function App() {
   return (
     <div className="flex flex-col px-8 md:px-16 lg:px-32 xl:px-40 h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Header */}
-      <header className="py-2 flex items-center justify-between text-xl font-semibold">
-        <span className="flex items-center gap-2 cursor-pointer">LazyBot<Bot size={30} /></span>
+      <header className="py-2 flex items-center justify-between font-semibold">
+        <span className="flex items-center gap-2 text-xl cursor-pointer">LazyBot<Bot size={30} /></span>
+        <span className="flex items-center gap-2 text-base">Start Chatting</span>
         <button
           onClick={toggleDarkMode}
           title="Toggle dark mode"
@@ -109,11 +110,10 @@ function App() {
 
             {/* Message Bubble */}
             <div
-              className={`max-w-4xl w-fit px-4 py-2 rounded-xl text-sm font-semibold leading-relaxed shadow ${
-                msg.sender === "user"
+              className={`max-w-4xl w-fit px-4 py-2 rounded-xl text-sm font-semibold leading-relaxed shadow ${msg.sender === "user"
                   ? "bg-blue-600 text-white rounded-br-none"
                   : "bg-gray-200 text-gray-900 rounded-tl-none"
-              }`}
+                }`}
             >
               {msg.sender === "bot" ? (
                 <ReactMarkdown>{msg.text}</ReactMarkdown>
@@ -127,7 +127,7 @@ function App() {
         {loading && (
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Loader2 className="animate-spin" />
-            Bot is typing...
+            LazyBot is typing slowly...
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -140,6 +140,12 @@ function App() {
           rows={1}
           value={input}
           onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e);
+            }
+          }}
           placeholder="Type your message..."
           className="flex-1 px-4 py-2 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-gray-400 resize-none overflow-hidden"
         />
