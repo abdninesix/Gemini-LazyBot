@@ -5,7 +5,8 @@ import { askGemini } from "./gemini.js";
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  // origin: "http://localhost:5173",
+  origin: "https://lazy-bot-by-abdullah.vercel.app",
   credentials: true,
 }));
 
@@ -24,6 +25,9 @@ app.post("/chat", async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
