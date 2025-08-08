@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { Send, Sun, Moon, Loader2, Bot, Copy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import TypingEffect from "react-typing-effect";
 
 function App() {
   const [messages, setMessages] = useState([
@@ -116,17 +115,7 @@ function App() {
                 }`}
             >
               {msg.sender === "bot" ? (
-                loading ? (
-                  <TypingEffect
-                    text={msg.text}
-                    speed={100}
-                    eraseDelay={500}
-                    typingDelay={500}
-                    cursorRenderer={(cursor) => <span>{cursor}</span>}
-                  />
-                ) : (
-                  <ReactMarkdown>{msg.text}</ReactMarkdown>
-                )
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
               ) : (
                 msg.text
               )}
