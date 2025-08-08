@@ -5,7 +5,7 @@ import { askGemini } from "./gemini.js";
 const app = express();
 
 app.use(cors({
-  // origin: "http://localhost:5173 something something",
+  // origin: "http://localhost:5173",
   origin: "https://lazy-bot-by-abdullah.vercel.app",
   credentials: true,
 }));
