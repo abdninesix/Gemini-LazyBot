@@ -81,22 +81,21 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col px-8 md:px-16 lg:px-32 xl:px-40 h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="flex flex-col px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-300 duration-300">
       {/* Header */}
-      <header className="w-full py-2 px-8 md:px-16 lg:px-32 xl:px-40 fixed top-0 left-0 flex items-center justify-between font-semibold backdrop-blur-sm">
+      <header className="py-2 flex items-center justify-center font-semibold">
         <span className="flex items-center gap-2 text-xl cursor-pointer">LazyBot<Bot size={30} /></span>
-        <span className="text-base">Start Chatting</span>
-        <button
+        {/* <button
           onClick={toggleDarkMode}
           title="Toggle dark mode"
           className="cursor-pointer"
         >
           {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-        </button>
+        </button> */}
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-6 space-y-4 scrollbar-none">
+      <div className="flex-1 overflow-y-auto space-y-4 scrollbar-none">
         {messages.map((msg, idx) => (
           <div key={idx} className={`group flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
             {/* Copy Button */}
@@ -111,8 +110,8 @@ function App() {
             {/* Message Bubble */}
             <div
               className={`max-w-4xl w-fit px-4 py-2 rounded-xl text-sm font-semibold leading-relaxed shadow ${msg.sender === "user"
-                  ? "bg-blue-600 text-white rounded-br-none"
-                  : "bg-gray-200 text-gray-900 rounded-tl-none"
+                  ? "bg-blue-500 text-white rounded-br-none"
+                  : "bg-gray-300 text-gray-900 rounded-tl-none"
                 }`}
             >
               {msg.sender === "bot" ? (
@@ -134,7 +133,7 @@ function App() {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="w-full fixed bottom-0 left-0 py-2 px-8 md:px-16 lg:px-32 xl:px-40 flex items-end gap-2 backdrop-blur-sm">
+      <form onSubmit={handleSubmit} className="py-2 flex items-end gap-2">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -147,7 +146,7 @@ function App() {
             }
           }}
           placeholder="Type your message..."
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-gray-400 resize-none overflow-hidden"
+          className="flex-1 px-4 py-2 border border-gray-500 rounded-xl outline-none focus:ring-2 focus:ring-gray-400 resize-none overflow-hidden"
         />
         <button
           type="submit"
