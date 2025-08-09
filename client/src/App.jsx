@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
-import { Send, Sun, Moon, Loader2, Bot, Copy, HeartCrack } from "lucide-react";
+import { Send, Sun, Moon, Loader2, Copy, HeartCrack } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import Bot from "./assets/Bot";
 
 function App() {
   const [messages, setMessages] = useState([
@@ -75,8 +76,8 @@ function App() {
         // "http://localhost:3000/chat",
         "https://gemini-lazy-bot.vercel.app/chat",
         {
-        messages: updatedMessages,
-      });
+          messages: updatedMessages,
+        });
 
       const botMessage = { sender: "bot", text: res.data.reply };
       setMessages((prev) => [...prev, botMessage]);
@@ -110,7 +111,7 @@ function App() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-center justify-between font-semibold">
         <span className="flex items-center gap-2 text-xl cursor-pointer">
-          LazyBot <Bot size={30} />
+          LazyBot <Bot/>
         </span>
 
         <div className="flex items-center gap-4">
