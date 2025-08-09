@@ -109,7 +109,7 @@ function App() {
   return (
     <div className="flex flex-col px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-300 duration-300">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-center justify-between font-semibold">
+      <header className="fixed top-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-center justify-between font-semibold backdrop-blur-xs">
         <span className="flex items-center gap-2 text-xl cursor-pointer">
           LazyBot <Bot/>
         </span>
@@ -178,7 +178,7 @@ function App() {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="fixed bottom-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-end gap-2">
+      <form onSubmit={handleSubmit} className="fixed bottom-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-end gap-2 backdrop-blur-xs">
         <textarea
           ref={textareaRef}
           rows={1}
