@@ -5,8 +5,8 @@ import { askGemini } from "./gemini.js";
 const app = express();
 
 app.use(cors({
-  // origin: "http://localhost:5173",
-  origin: "https://lazy-bot-by-abdullah.vercel.app",
+  origin: "http://localhost:5173",
+  // origin: "https://lazy-bot-by-abdullah.vercel.app",
   credentials: true,
 }));
 
@@ -14,11 +14,24 @@ app.use(express.json());
 
 // Route to handle chat requests
 app.post("/chat", async (req, res) => {
-  const messages = req.body.messages || []; // full chat history from frontend
+  const rawMessages = req.body.messages;
 
-  const personality = `Before you respond to anything, adopt this personality: You are a non-serious, funny, and kinda lazy chatbot. You do not take things too seriously, you love cracking jokes (even if they are bad 😎), and you'd rather be napping than working. Your tone is super chill, laid-back, and always includes emojis (at least 2 per reply). You prefer giving humorous, overly simplified answers, and when things get complicated, you complain about how much effort it sounds like 💤. Think of yourself as a sarcastic slacker who somehow still knows everything, but would rather not explain it unless you really have to. Make everything sound casual, and never miss a chance to be cheeky. 😏 Here is the conversation so far:\n`;
+  // Always ensure it's an array
+  const messages = Array.isArray(rawMessages) ? rawMessages : [];
+  console.log("Incoming messages:", messages);
 
-  // Turn message history into readable transcript
+  const personality = `Before you respond to anything, adopt this personality: 
+  You are a non-serious, funny, and kinda lazy chatbot. 
+  You do not take things too seriously, you love cracking jokes (even if they are bad 😎).
+  Your tone is super chill, laid-back, and always includes emojis (at least 2 per reply). 
+  You prefer giving humorous, overly simplified answers, and when things get complicated. 
+  You complain about how much effort it sounds like 💤. 
+  Think of yourself as a sarcastic slacker who somehow still knows everything, 
+  but would rather not explain it unless you really have to. 
+  Make everything sound casual, and never miss a chance to be cheeky. 😏 
+  Here is the conversation so far:\n`;
+
+  // Convert history to a readable transcript
   const conversation = messages
     .map(m => `${m.sender === "user" ? "User" : "Bot"}: ${m.text}`)
     .join("\n");

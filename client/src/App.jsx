@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
-import { Send, Sun, Moon, Loader2, Bot, Copy } from "lucide-react";
+import { Send, Sun, Moon, Loader2, Bot, Copy, HeartCrack } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 function App() {
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hello! How can I help you today?" },
+    { sender: "bot", text: "Well hello there 😎" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [showClearWarning, setShowClearWarning] = useState(false);
 
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -64,15 +65,18 @@ function App() {
     if (!input.trim()) return;
 
     const newMessage = { sender: "user", text: input };
-    setMessages((prev) => [...prev, newMessage]);
+    const safeMessages = Array.isArray(messages) ? messages : [];
+    const updatedMessages = [...safeMessages, newMessage];
+
+    setMessages(updatedMessages);
     setInput("");
-    textareaRef.current.style.height = "auto"; // reset height
     setLoading(true);
 
     try {
-      const res = await axios.post("https://gemini-lazy-bot.vercel.app/chat", {
-        messages: messages.concat(newMessage) // send history + latest message
+      const res = await axios.post("http://localhost:3000/chat", {
+        messages: updatedMessages,
       });
+
       const botMessage = { sender: "bot", text: res.data.reply };
       setMessages((prev) => [...prev, botMessage]);
     } catch (err) {
@@ -88,28 +92,53 @@ function App() {
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
-    textareaRef.current.style.height = "auto"; // shrink first
-    textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; // grow to fit
+    textareaRef.current.style.height = "auto";
+    textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+  };
+
+  const clearChatHistory = () => {
+    localStorage.removeItem("chatHistory");
+    setMessages([{ sender: "bot", text: "Well hello there 😎" }]);
+    setShowClearWarning(false);
   };
 
   return (
     <div className="flex flex-col px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-300 duration-300">
       {/* Header */}
-      <header className="py-2 flex items-center justify-center font-semibold">
-        <span className="flex items-center gap-2 text-xl cursor-pointer">LazyBot<Bot size={30} /></span>
-        {/* <button
-          onClick={toggleDarkMode}
-          title="Toggle dark mode"
-          className="cursor-pointer"
-        >
-          {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-        </button> */}
+      <header className="fixed top-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-center justify-between font-semibold">
+        <span className="flex items-center gap-2 text-xl cursor-pointer">
+          LazyBot <Bot size={30} />
+        </span>
+
+        <div className="flex items-center gap-4">
+          {/* Clear Chat Button */}
+          <button
+            onClick={() => setShowClearWarning(true)}
+            title="Clear chat"
+            className="cursor-pointer text-red-500 hover:text-red-700"
+          >
+            <HeartCrack size={20} />
+          </button>
+
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={toggleDarkMode}
+            title="Toggle dark mode"
+            className="cursor-pointer"
+          >
+            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+        </div>
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-4 scrollbar-none">
+      <div className="flex-1 overflow-y-auto space-y-4 scrollbar-none mt-12 mb-12">
         {messages.map((msg, idx) => (
-          <div key={idx} className={`group flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
+          <div
+            key={idx}
+            className={`group flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"
+              }`}
+          >
             {/* Copy Button */}
             <button
               onClick={() => navigator.clipboard.writeText(msg.text)}
@@ -145,7 +174,7 @@ function App() {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="py-2 flex items-end gap-2">
+      <form onSubmit={handleSubmit} className="fixed bottom-0 left-0 right-0 py-2 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40 flex items-end gap-2">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -158,7 +187,7 @@ function App() {
             }
           }}
           placeholder="Type your message..."
-          className="flex-1 px-4 py-2 border border-gray-500 rounded-xl outline-none focus:ring-2 focus:ring-gray-400 resize-none overflow-hidden"
+          className="flex-1 px-4 py-2 border border-gray-500 bg-white rounded-xl outline-none focus:ring-2 focus:ring-gray-400 resize-none overflow-hidden"
         />
         <button
           type="submit"
@@ -167,6 +196,29 @@ function App() {
           <Send className="size-5" />
         </button>
       </form>
+
+      {/* Clear Warning */}
+      {showClearWarning && (
+        <div className="fixed inset-0 flex items-center justify-center p-10 z-50 bg-black/50">
+          <div className="max-w-md bg-red-100 dark:bg-red-800 px-4 py-3 rounded-xl shadow-lg flex flex-col items-center gap-2">
+            <span>Are you sure you want to break our friendship and erase my memory? This cannot be undone. 😢</span>
+            <div className="w-full flex justify-between gap-2">
+              <button
+                onClick={clearChatHistory}
+                className="w-full px-3 py-1 cursor-pointer bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowClearWarning(false)}
+                className="w-full px-3 py-1 cursor-pointer bg-gray-300 dark:bg-gray-600 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
