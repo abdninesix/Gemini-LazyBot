@@ -20,6 +20,19 @@ function App() {
 
   useEffect(scrollToBottom, [messages]);
 
+  // Load saved messages from localStorage
+  useEffect(() => {
+    const savedMessages = JSON.parse(localStorage.getItem("chatHistory"));
+    if (savedMessages && savedMessages.length > 0) {
+      setMessages(savedMessages);
+    }
+  }, []);
+
+  // Keep the history updated
+  useEffect(() => {
+    localStorage.setItem("chatHistory", JSON.stringify(messages));
+  }, [messages]);
+
   useEffect(() => {
     const root = document.documentElement;
     const isDark = localStorage.getItem("theme") === "dark";
@@ -58,9 +71,8 @@ function App() {
 
     try {
       const res = await axios.post("https://gemini-lazy-bot.vercel.app/chat", {
-        message: input,
+        messages: messages.concat(newMessage) // send history + latest message
       });
-
       const botMessage = { sender: "bot", text: res.data.reply };
       setMessages((prev) => [...prev, botMessage]);
     } catch (err) {
