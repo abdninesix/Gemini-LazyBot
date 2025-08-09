@@ -15,10 +15,10 @@ function App() {
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
+  // Scroll to bottom while sending messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
   useEffect(scrollToBottom, [messages]);
 
   // Load saved messages from localStorage
@@ -34,32 +34,30 @@ function App() {
     localStorage.setItem("chatHistory", JSON.stringify(messages));
   }, [messages]);
 
+  // Set theme on page load
   useEffect(() => {
-    const root = document.documentElement;
-    const isDark = localStorage.getItem("theme") === "dark";
-
-    if (isDark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
-    setDarkMode(isDark);
+    document.documentElement.classList.toggle(
+      "dark",
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+    setDarkMode(document.documentElement.classList.contains("dark"));
   }, []);
 
   const toggleDarkMode = () => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+    const isDark = document.documentElement.classList.contains("dark");
+    if (isDark) {
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
       setDarkMode(false);
     } else {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
       setDarkMode(true);
     }
   };
 
+  // User messages and bot messages along with history submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -73,7 +71,10 @@ function App() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:3000/chat", {
+      const res = await axios.post(
+        // "http://localhost:3000/chat",
+        "https://gemini-lazy-bot.vercel.app/chat",
+        {
         messages: updatedMessages,
       });
 
@@ -90,12 +91,14 @@ function App() {
     }
   };
 
+  // Auto resizing of input box
   const handleInputChange = (e) => {
     setInput(e.target.value);
     textareaRef.current.style.height = "auto";
     textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
   };
 
+  // Clear conversation from local storage
   const clearChatHistory = () => {
     localStorage.removeItem("chatHistory");
     setMessages([{ sender: "bot", text: "Well hello there 😎" }]);
